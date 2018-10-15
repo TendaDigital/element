@@ -313,6 +313,28 @@ export default {
       return;
     }
 
+    column.renderHeader = function(h, data) {
+      if (_self.$scopedSlots.header) {
+        renderHeader = function renderHeader() {
+          return _self.$scopedSlots.header(data);
+        };
+      }
+      
+      if(!renderHeader) {
+        return null
+      }
+
+      return _self.showOverflowTooltip || _self.showTooltipWhenOverflow ? h(
+        'div',
+        { 'class': 'cell el-tooltip', style: { width: (data.column.realWidth || data.column.width) - 1 + 'px' } },
+        [renderHeader(h, data)]
+      ) : h(
+        'div',
+        { 'class': 'cell' },
+        [renderHeader(h, data)]
+      );
+    }
+
     column.renderCell = function(h, data) {
       if (_self.$scopedSlots.default) {
         renderCell = () => _self.$scopedSlots.default(data);
@@ -444,8 +466,8 @@ export default {
       columnIndex = [].indexOf.call(parent.$el.children, this.$el);
     }
 
-    if (this.$scopedSlots.header) {
-      this.columnConfig.renderHeader = this.$scopedSlots.header;
+    if (!this.$scopedSlots.header) {
+      this.columnConfig.renderHeader = null
     }
 
     owner.store.commit('insertColumn', this.columnConfig, columnIndex, this.isSubColumn ? parent.columnConfig : null);
