@@ -227,20 +227,20 @@
         }],
         tableData7: [{
           date: '2016-05-02',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
           date: '2016-05-04',
-          name: 'John',
-          address: 'No. 189, Grove St, Los Angeles',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
         }, {
           date: '2016-05-01',
-          name: 'Morgan',
-          address: 'No. 189, Grove St, Los Angeles',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
         }, {
           date: '2016-05-03',
-          name: 'Jessy',
-          address: 'No. 189, Grove St, Los Angeles',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
         }],
         currentRow: null,
         multipleSelection: [],
@@ -274,6 +274,12 @@
         });
 
         return sums;
+      },
+      resetDateFilter() {
+        this.$refs.filterTable.clearFilter('date');
+      },
+      clearFilter() {
+        this.$refs.filterTable.clearFilter();
       },
       setCurrent(row) {
         this.$refs.singleTable.setCurrentRow(row);
@@ -1394,7 +1400,10 @@
 :::demo 在列中设置`filters` `filter-method`属性即可开启该列的筛选，filters 是一个数组，`filter-method`是一个方法，它用于决定某些数据是否显示，会传入三个参数：`value`, `row` 和 `column`。
 ```html
 <template>
+  <el-button @click="resetDateFilter">清除日期过滤器</el-button>
+  <el-button @click="clearFilter">清除所有过滤器</el-button>
   <el-table
+    ref="filterTable"
     :data="tableData"
     style="width: 100%">
     <el-table-column
@@ -1402,6 +1411,7 @@
       label="日期"
       sortable
       width="180"
+      column-key="date"
       :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
       :filter-method="filterHandler"
     >
@@ -1460,6 +1470,12 @@
       }
     },
     methods: {
+      resetDateFilter() {
+        this.$refs.filterTable.clearFilter('date');
+      },
+      clearFilter() {
+        this.$refs.filterTable.clearFilter();
+      },
       formatter(row, column) {
         return row.address;
       },
@@ -1666,10 +1682,11 @@
 ```
 :::
 
-### Table with custom header
+### 自定义表头
 
-Customize table header so it can be even more customized.
-:::demo You can customize how the header looks by [Default slot content](https://vuejs.org/v2/guide/components-slots.html#Default-Slot-Content).
+表头支持自定义。
+
+:::demo 通过设置 [Scoped slot](https://cn.vuejs.org/v2/guide/components-slots.html#%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%8F%92%E6%A7%BD) 来自定义表头。
 ```html
 <template>
   <el-table
@@ -1684,12 +1701,13 @@ Customize table header so it can be even more customized.
       prop="name">
     </el-table-column>
     <el-table-column
+      label="输入关键字搜索"
       align="right">
-      <template slot="header" slot-scope="slot">
+      <template slot="header" slot-scope="scope">
         <el-input
           v-model="search"
           size="mini"
-          placeholder="Type to search"/>
+          :placeholder="scope.column.label"/>
       </template>
       <template slot-scope="scope">
         <el-button
@@ -1710,27 +1728,31 @@ Customize table header so it can be even more customized.
       return {
         tableData: [{
           date: '2016-05-02',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
           date: '2016-05-04',
-          name: 'John',
-          address: 'No. 189, Grove St, Los Angeles',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
         }, {
           date: '2016-05-01',
-          name: 'Morgan',
-          address: 'No. 189, Grove St, Los Angeles',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
         }, {
           date: '2016-05-03',
-          name: 'Jessy',
-          address: 'No. 189, Grove St, Los Angeles',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
         }],
         search: ''
       }
     },
     methods: {
-      handleEdit(){},
-      handleDelete(){}
+      handleEdit(index, row) {
+        console.log(index, row);
+      },
+      handleDelete(index, row) {
+        console.log(index, row);
+      }
     },
   }
 </script>
@@ -2156,7 +2178,7 @@ Customize table header so it can be even more customized.
 | toggleRowExpansion | 用于可展开表格，切换某一行的展开状态，如果使用了第二个参数，则是设置这一行展开与否（expanded 为 true 则展开） | row, expanded |
 | setCurrentRow | 用于单选表格，设定某一行为选中行，如果调用时不加参数，则会取消目前高亮行的选中状态。 | row |
 | clearSort | 用于清空排序条件，数据会恢复成未排序的状态 | — |
-| clearFilter | 用于清空过滤条件，数据会恢复成未过滤的状态 | — |
+| clearFilter | 不传入参数时用于清空所有过滤条件，数据会恢复成未过滤的状态，也可传入由columnKey组成的数组以清除指定列的过滤条件 | columnKey |
 | doLayout | 对 Table 进行重新布局。当 Table 或其祖先元素由隐藏切换为显示时，可能需要调用此方法 | — |
 | sort | 手动对 Table 进行排序。参数`prop`属性指定排序列，`order`指定排序顺序。 | prop: string, order: string |
 
@@ -2200,4 +2222,4 @@ Customize table header so it can be even more customized.
 | name | 说明 |
 |------|--------|
 | — | 自定义列的内容，参数为 { row, column, $index } |
-| header | Custom content for table header. The scope parameter is { column, $index } |
+| header | 自定义表头的内容. 参数为 { column, $index } |
