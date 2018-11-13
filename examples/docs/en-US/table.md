@@ -185,6 +185,23 @@
           amount2: '4.1',
           amount3: 15
         }],
+        tableData7: [{
+          date: '2016-05-02',
+          name: 'Tom',
+          address: 'No. 189, Grove St, Los Angeles',
+        }, {
+          date: '2016-05-04',
+          name: 'John',
+          address: 'No. 189, Grove St, Los Angeles',
+        }, {
+          date: '2016-05-01',
+          name: 'Morgan',
+          address: 'No. 189, Grove St, Los Angeles',
+        }, {
+          date: '2016-05-03',
+          name: 'Jessy',
+          address: 'No. 189, Grove St, Los Angeles',
+        }],
         currentRow: null,
         multipleSelection: [],
         search: '',
@@ -1508,7 +1525,7 @@ Customize table header so it can be even more customized.
 ```html
 <template>
   <el-table
-    :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+    :data="tableData7.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
     style="width: 100%">
     <el-table-column
       label="Date"
@@ -1519,13 +1536,6 @@ Customize table header so it can be even more customized.
       prop="name">
     </el-table-column>
     <el-table-column
-      v-for="header in extraColumns"
-      :key="header"
-      :label="header"
-      prop="name">
-    </el-table-column>
-    <el-table-column
-      label="Name"
       align="right">
       <template slot="header" slot-scope="slot">
         <el-input
@@ -1556,18 +1566,23 @@ Customize table header so it can be even more customized.
           address: 'No. 189, Grove St, Los Angeles'
         }, {
           date: '2016-05-02',
-          name: 'Tom',
+          name: 'John',
           address: 'No. 189, Grove St, Los Angeles'
         }, {
           date: '2016-05-04',
-          name: 'Tom',
+          name: 'Morgan',
           address: 'No. 189, Grove St, Los Angeles'
         }, {
           date: '2016-05-01',
-          name: 'Tom',
+          name: 'Jessy',
           address: 'No. 189, Grove St, Los Angeles'
-        }]
+        }],
+        search: '',
       }
+    },
+    methods: {
+      handleEdit(){},
+      handleDelete(){}
     },
   }
 </script>
@@ -2125,3 +2140,4 @@ You can customize row index in `type=index` columns.
 | Name | Description |
 |------|--------|
 | — | Custom content for table columns. The scope parameter is { row, column, $index } |
+| header | Custom content for table header. The scope parameter is { column, $index } |
